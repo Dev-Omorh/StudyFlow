@@ -1,12 +1,19 @@
-import Tasks from "./Tasks";
+import Sidebar from "../components/Sidebar";
+import SummaryCard from "../components/SummaryCard";
+import ExamCard from "../components/ExamCard";
+import TaskCard from "../components/TaskCard";
 import Logo from "../components/Logo";
 
-function App() {
+function Dashboard() {
   return (
-    <div>
-      <div>
-        <Logo />
-      </div>
+    <>
+      <Sidebar />
+      <Logo />
+
+      <SummaryCard title="Due Today" />
+      <SummaryCard title="Pending Assignment" value={4} />
+      <SummaryCard title="Upcoming Exams" value={3} />
+      <SummaryCard title="Enrolled Courses" value={4} />
 
       <div className="content p-4 bg-gray-100 w-full ">
         <div className="Header">
@@ -264,13 +271,11 @@ function App() {
         </div>
       </div>
 
-      <div>
-        <Tasks />
-      </div>
+      <TaskCard />
 
-      <div></div>
-    </div>
+      <ExamCard />
+    </>
   );
 }
 
-export default App;
+export default Dashboard;
