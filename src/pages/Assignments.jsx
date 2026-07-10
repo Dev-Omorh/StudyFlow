@@ -1,12 +1,19 @@
-import Logo from "../components/Logo";
-import Button from "../components/Button";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import AssignmentItem from "../components/AssignmentItem";
+import AssignmentModal from "../components/AsignmentModal";
 
 function Assignments() {
   return (
-    <div>
-      <div>
-        <Logo />
-      </div>
+    <>
+      <Sidebar />
+      <Header />
+
+      <AssignmentItem />
+      <AssignmentItem />
+      <AssignmentItem />
+
+      <AssignmentModal />
 
       <div className="content p-4 bg-gray-100 w-full">
         <div className="Header flex justify-between">
@@ -14,8 +21,6 @@ function Assignments() {
             <h1 className="text-3xl font-bold">Courses</h1>
             <p className="text-gray-600">5 active</p>
           </div>
-
-          <Button />
         </div>
 
         <div className="card w-full flex justify-between  pt-4 gap-4">
@@ -156,7 +161,7 @@ function Assignments() {
       </div>
 
       <p> Tip: clicka status badge to advance it to next stage </p>
-    </div>
+    </>
   );
 }
 

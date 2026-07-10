@@ -1,21 +1,26 @@
-import Logo from "./Exam countdown";
-import Button from "../components/Button";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import ExamItem from "../components/ExamItem";
+import ExamModal from "../components/ExamModal";
 
 function Exam() {
   return (
-    <div>
-      <div>
-        <Logo />
-      </div>
+    <>
+      <Sidebar />
+      <Header />
 
-      <div className="content p-4 bg-gray-100 w-full">
+      <ExamItem />
+      <ExamItem />
+      <ExamItem />
+
+      <ExamModal />
+
+      {/* <div className="content p-4 bg-gray-100 w-full">
         <div className="Header flex justify-between">
           <div>
             <h1 className="text-3xl font-bold">Exam Countdown</h1>
             <p className="text-gray-600">5 upcoming</p>
           </div>
-
-          <Button />
         </div>
 
         <div className="card w-full flex p-4 gap-4">
@@ -78,8 +83,8 @@ function Exam() {
 
           <div></div>
         </div>
-      </div>
-    </div>
+      </div> */}
+    </>
   );
 }
 

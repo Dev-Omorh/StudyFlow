@@ -21,7 +21,7 @@ function Note() {
 
       <NoteModal />
 
-      <div className="content p-4 bg-gray-100 w-full">
+      {/* <div className="content p-4 bg-gray-100 w-full">
         <div className="Header flex justify-between">
           <div>
             <h1 className="text-3xl font-bold">Exam Countdown</h1>
@@ -123,7 +123,7 @@ function Note() {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

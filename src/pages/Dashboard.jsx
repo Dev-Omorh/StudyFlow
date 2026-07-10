@@ -18,7 +18,7 @@ function Dashboard() {
         <SummaryCard title="Enrolled Courses" value={4} />
       </div>
 
-      <div className="content p-4 bg-gray-100 w-full ">
+      {/* <div className="content p-4 bg-gray-100 w-full ">
         <div className="Header">
           <h1 className="text-3xl font-bold">Good Evening, Alex!</h1>
           <p className="text-gray-600">Friday, July 3, 2026.</p>
@@ -272,7 +272,7 @@ function Dashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <TaskCard />
 

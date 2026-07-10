@@ -1,21 +1,26 @@
-import Button from "../components/Button";
-import Logo from "../components/Logo";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import CourseCard from "../components/CourseCard";
+import CourseModal from "../components/CourseModal";
 
 function Courses() {
   return (
-    <div>
-      <div>
-        <Logo />
-      </div>
+    <>
+      <Sidebar />
+      <Header />
 
-      <div className="content p-4 bg-gray-100 w-full">
+      <CourseCard />
+      <CourseCard />
+      <CourseCard />
+
+      <CourseModal />
+
+      {/* <div className="content p-4 bg-gray-100 w-full">
         <div className="Header flex justify-between">
           <div>
             <h1 className="text-3xl font-bold">Courses</h1>
             <p className="text-gray-600">4 enrolled this semester</p>
           </div>
-
-          <Button />
         </div>
 
         <div className="body">
@@ -121,8 +126,8 @@ function Courses() {
         </div>
       </div>
 
-      <div></div>
-    </div>
+      <div></div> */}
+    </>
   );
 }
 
