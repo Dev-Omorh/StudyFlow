@@ -1,10 +1,25 @@
-import Logo from "../components/Logo";
-import Button from "../components/Button";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+import Search from "../components/Search";
+import FilterButton from "../components/Filter Button";
+import NoteItem from "../components/NoteItem";
+import NoteModal from "../components/NoteModal";
 
 function Note() {
   return (
-    <div>
-      <Logo />
+    <>
+      <Sidebar />
+      <Header />
+
+      <Search />
+
+      <FilterButton />
+
+      <NoteItem />
+      <NoteItem />
+      <NoteItem />
+
+      <NoteModal />
 
       <div className="content p-4 bg-gray-100 w-full">
         <div className="Header flex justify-between">
@@ -12,8 +27,6 @@ function Note() {
             <h1 className="text-3xl font-bold">Exam Countdown</h1>
             <p className="text-gray-600">5 upcoming</p>
           </div>
-
-          <Button />
         </div>
 
         <div className="card w-full flex justify-between  pt-4 gap-4">
@@ -111,7 +124,7 @@ function Note() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

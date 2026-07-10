@@ -1,12 +1,23 @@
-import Logo from "../components/Logo";
-import Button from "../components/Button";
+import Header from "../components/Header";
+import FilterButton from "../components/Filter Button";
+import Sidebar from "../components/Sidebar";
+import TaskItem from "../components/TaskItem";
+import TaskModal from "../components/TaskModal";
 
 function Tasks() {
   return (
-    <div>
-      <div>
-        <Logo />
-      </div>
+    <>
+      <Sidebar />
+      <Header />
+
+      <FilterButton />
+
+      <TaskItem />
+      <TaskItem />
+      <TaskItem />
+      <TaskItem />
+
+      <TaskModal />
 
       <div className="content p-4 bg-gray-100 w-full ">
         <div className="Header flex justify-between">
@@ -14,8 +25,6 @@ function Tasks() {
             <h1 className="text-3xl font-bold">Tasks</h1>
             <p className="text-gray-600">5 pending</p>
           </div>
-
-          <Button />
         </div>
 
         <div className="card w-full flex justify-between  pt-4 gap-4">
@@ -153,7 +162,7 @@ function Tasks() {
 
         <div></div>
       </div>
-    </div>
+    </>
   );
 }
 

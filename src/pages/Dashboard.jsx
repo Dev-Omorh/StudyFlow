@@ -2,18 +2,21 @@ import Sidebar from "../components/Sidebar";
 import SummaryCard from "../components/SummaryCard";
 import ExamCard from "../components/ExamCard";
 import TaskCard from "../components/TaskCard";
-import Logo from "../components/Logo";
+import NoteCard from "../components/NOteCard";
+import Header from "../components/Header";
 
 function Dashboard() {
   return (
     <>
       <Sidebar />
-      <Logo />
+      <Header />
 
-      <SummaryCard title="Due Today" />
-      <SummaryCard title="Pending Assignment" value={4} />
-      <SummaryCard title="Upcoming Exams" value={3} />
-      <SummaryCard title="Enrolled Courses" value={4} />
+      <div className="summary-cards">
+        <SummaryCard title="Due Today" />
+        <SummaryCard title="Pending Assignment" value={4} />
+        <SummaryCard title="Upcoming Exams" value={3} />
+        <SummaryCard title="Enrolled Courses" value={4} />
+      </div>
 
       <div className="content p-4 bg-gray-100 w-full ">
         <div className="Header">
@@ -274,6 +277,8 @@ function Dashboard() {
       <TaskCard />
 
       <ExamCard />
+
+      <NoteCard />
     </>
   );
 }
