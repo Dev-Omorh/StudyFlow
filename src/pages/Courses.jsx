@@ -1,7 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import CourseCard from "../components/CourseCard";
-import CourseModal from "../components/CourseModal";
+// import CourseModal from "../components/CourseModal";
 
 function Courses() {
   return (
@@ -13,7 +13,7 @@ function Courses() {
       <CourseCard />
       <CourseCard />
 
-      <CourseModal />
+      {/* <CourseModal /> */}
 
       {/* <div className="content p-4 bg-gray-100 w-full">
         <div className="Header flex justify-between">

@@ -1,9 +1,21 @@
-function Ui() {
+import Dashboard from "../pages/Dashboard";
+import Tasks from "../pages/Tasks";
+import Courses from "../pages/Courses";
+import Assignment from "../pages/Assignments";
+import Examcountdown from "../pages/Exam countdown";
+import Notes from "../pages/Note";
+
+function SideBar() {
   return (
     <div>
-      <h1>Hello World!</h1>
+      <Dashboard />
+      <Tasks />
+      <Courses />
+      <Assignment />
+      <Examcountdown />
+      <Notes />
     </div>
   );
 }
 
-export default Ui;
+export default SideBar;

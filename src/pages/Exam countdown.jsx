@@ -1,7 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import ExamItem from "../components/ExamItem";
-import ExamModal from "../components/ExamModal";
+import ExamCard from "../components/ExamCard";
+// import ExamModal from "../components/ExamModal";
 
 function Exam() {
   return (
@@ -9,11 +9,11 @@ function Exam() {
       <Sidebar />
       <Header />
 
-      <ExamItem />
-      <ExamItem />
-      <ExamItem />
+      <ExamCard />
+      <ExamCard />
+      <ExamCard />
 
-      <ExamModal />
+      {/* <ExamModal /> */}
 
       {/* <div className="content p-4 bg-gray-100 w-full">
         <div className="Header flex justify-between">

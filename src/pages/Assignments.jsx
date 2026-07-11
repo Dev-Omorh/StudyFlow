@@ -1,7 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import AssignmentItem from "../components/AssignmentItem";
-import AssignmentModal from "../components/AsignmentModal";
+import AssignmentCard from "../components/AssignmentCard";
+// import AssignmentModal from "../components/AsignmentModal";
 
 function Assignments() {
   return (
@@ -9,11 +9,11 @@ function Assignments() {
       <Sidebar />
       <Header />
 
-      <AssignmentItem />
-      <AssignmentItem />
-      <AssignmentItem />
+      <AssignmentCard />
+      <AssignmentCard />
+      <AssignmentCard />
 
-      <AssignmentModal />
+      {/* <AssignmentModal /> */}
 
       <div className="content p-4 bg-gray-100 w-full">
         <div className="Header flex justify-between">
