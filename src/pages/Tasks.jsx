@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import FilterButton from "../components/Filter Button";
 import Sidebar from "../components/Sidebar";
 import TaskCard from "../components/TaskCard";
-import TaskModal from "../components/TaskModal";
+// import TaskModal from "../components/TaskModal";
 
 function Tasks() {
   const [tasks, setTasks] = useState([
@@ -60,7 +60,7 @@ function Tasks() {
         />
       ))}
 
-      <TaskModal />
+      {/* <TaskModal /> */}
     </>
   );
 }
