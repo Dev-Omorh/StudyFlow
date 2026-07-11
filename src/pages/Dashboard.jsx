@@ -2,7 +2,7 @@ import Sidebar from "../components/Sidebar";
 import SummaryCard from "../components/SummaryCard";
 import ExamCard from "../components/ExamCard";
 import TaskCard from "../components/TaskCard";
-import NoteCard from "../components/NOteCard";
+import NoteCard from "../components/NoteCard";
 import Header from "../components/Header";
 
 function Dashboard() {
