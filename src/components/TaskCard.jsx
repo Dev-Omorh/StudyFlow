@@ -3,7 +3,7 @@ function TaskCard({ task, onDelete, onEdit, onToggle }) {
     <div className="task-card">
       <input
         type="checkbox"
-        checkbox={task.completed}
+        checked={task.completed}
         onChange={() => onToggle(task.id)}
       />
 
