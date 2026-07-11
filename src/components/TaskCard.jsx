@@ -1,7 +1,14 @@
-function TaskCard({ task }) {
+function TaskCard({ task, onDelete, onEdit, onToggle }) {
   return (
     <div className="task-card">
-      <input type="checkbox" checkbox={task.completed} />
+      <input
+        type="checkbox"
+        checkbox={task.completed}
+        onChange={() => onToggle(task.id)}
+      />
+
+      <button onClick={() => onDelete(task.id)}>Delete</button>
+      <button onClick={() => onEdit(task.id)}>Edit</button>
 
       <div>
         <h3>{task.title}</h3>
