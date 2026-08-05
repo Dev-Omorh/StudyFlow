@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   CheckSquare,
   Plus,
@@ -15,7 +15,8 @@ import {
 import { useStudy } from "../context/StudyContext";
 
 export default function Tasks() {
-  const { tasks, courses, toggleTaskStatus, deleteTask, openModal } = useStudy();
+  const { tasks, courses, toggleTaskStatus, deleteTask, openModal } =
+    useStudy();
 
   const [viewMode, setViewMode] = useState("list"); // 'list' | 'kanban'
   const [selectedCourse, setSelectedCourse] = useState("all");
@@ -24,9 +25,13 @@ export default function Tasks() {
 
   // Filtering
   const filteredTasks = tasks.filter((t) => {
-    const matchesCourse = selectedCourse === "all" || t.courseId === selectedCourse;
-    const matchesPriority = selectedPriority === "all" || t.priority === selectedPriority;
-    const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCourse =
+      selectedCourse === "all" || t.courseId === selectedCourse;
+    const matchesPriority =
+      selectedPriority === "all" || t.priority === selectedPriority;
+    const matchesSearch = t.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     return matchesCourse && matchesPriority && matchesSearch;
   });
 
@@ -105,7 +110,9 @@ export default function Tasks() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <Filter className="h-3.5 w-3.5 text-slate-400" />
-            <span className="text-xs font-semibold text-slate-500">Course:</span>
+            <span className="text-xs font-semibold text-slate-500">
+              Course:
+            </span>
             <select
               value={selectedCourse}
               onChange={(e) => setSelectedCourse(e.target.value)}
@@ -121,7 +128,9 @@ export default function Tasks() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-slate-500">Priority:</span>
+            <span className="text-xs font-semibold text-slate-500">
+              Priority:
+            </span>
             <select
               value={selectedPriority}
               onChange={(e) => setSelectedPriority(e.target.value)}
@@ -140,7 +149,9 @@ export default function Tasks() {
       {viewMode === "list" ? (
         <div className="glass-card rounded-3xl p-6 space-y-3">
           {filteredTasks.length === 0 ? (
-            <p className="py-12 text-center text-sm text-slate-400">No tasks match your filter.</p>
+            <p className="py-12 text-center text-sm text-slate-400">
+              No tasks match your filter.
+            </p>
           ) : (
             filteredTasks.map((task) => {
               const isDone = task.status === "completed";
@@ -164,7 +175,9 @@ export default function Tasks() {
                     <div>
                       <h4
                         className={`text-sm font-bold text-slate-900 dark:text-white ${
-                          isDone ? "line-through text-slate-400 dark:text-slate-500" : ""
+                          isDone
+                            ? "line-through text-slate-400 dark:text-slate-500"
+                            : ""
                         }`}
                       >
                         {task.title}
@@ -172,14 +185,18 @@ export default function Tasks() {
                       <div className="flex flex-wrap items-center gap-2 mt-1.5">
                         <span
                           className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
-                          style={{ backgroundColor: getCourseColor(task.courseId) }}
+                          style={{
+                            backgroundColor: getCourseColor(task.courseId),
+                          }}
                         >
                           {getCourseCode(task.courseId)}
                         </span>
                         <span className="flex items-center gap-1 text-[11px] text-slate-400 font-medium">
                           <Clock className="h-3 w-3" /> Due {task.dueDate}
                         </span>
-                        <span className="text-[11px] text-slate-400">⏱️ {task.estimatedTime}</span>
+                        <span className="text-[11px] text-slate-400">
+                          ⏱️ {task.estimatedTime}
+                        </span>
                         {task.tags &&
                           task.tags.map((tg) => (
                             <span
@@ -228,8 +245,16 @@ export default function Tasks() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { key: "todo", title: "To Do", color: "border-slate-400" },
-            { key: "in_progress", title: "In Progress", color: "border-amber-400" },
-            { key: "completed", title: "Completed", color: "border-emerald-400" },
+            {
+              key: "in_progress",
+              title: "In Progress",
+              color: "border-amber-400",
+            },
+            {
+              key: "completed",
+              title: "Completed",
+              color: "border-emerald-400",
+            },
           ].map((col) => {
             const colTasks = filteredTasks.filter((t) => t.status === col.key);
             return (
@@ -237,7 +262,9 @@ export default function Tasks() {
                 key={col.key}
                 className="glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4"
               >
-                <div className={`flex items-center justify-between border-b-2 ${col.color} pb-3`}>
+                <div
+                  className={`flex items-center justify-between border-b-2 ${col.color} pb-3`}
+                >
                   <h3 className="font-bold text-slate-900 dark:text-white text-base">
                     {col.title}
                   </h3>
@@ -255,7 +282,9 @@ export default function Tasks() {
                       <div className="flex items-center justify-between">
                         <span
                           className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
-                          style={{ backgroundColor: getCourseColor(task.courseId) }}
+                          style={{
+                            backgroundColor: getCourseColor(task.courseId),
+                          }}
                         >
                           {getCourseCode(task.courseId)}
                         </span>

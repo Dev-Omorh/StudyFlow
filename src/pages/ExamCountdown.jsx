@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Clock,
   Plus,
@@ -16,17 +16,25 @@ import { useStudy } from "../context/StudyContext";
 export default function ExamCountdown() {
   const { exams, courses, toggleExamTopic, deleteExam, openModal } = useStudy();
 
-  const [selectedExamId, setSelectedExamId] = useState(() => exams[0]?.id || null);
+  const [selectedExamId, setSelectedExamId] = useState(
+    () => exams[0]?.id || null,
+  );
 
   const selectedExam = exams.find((e) => e.id === selectedExamId) || exams[0];
 
   // Real-time ticking timer for selected exam
-  const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
+  const [timeRemaining, setTimeRemaining] = useState({
+    days: 0,
+    hours: 0,
+    mins: 0,
+    secs: 0,
+  });
 
   useEffect(() => {
     const updateDiff = () => {
       if (!selectedExam?.examDate) return;
-      const diff = new Date(selectedExam.examDate).getTime() - new Date().getTime();
+      const diff =
+        new Date(selectedExam.examDate).getTime() - new Date().getTime();
       if (diff <= 0) {
         setTimeRemaining({ days: 0, hours: 0, mins: 0, secs: 0 });
         return;
@@ -62,7 +70,8 @@ export default function ExamCountdown() {
             Exam Countdown & Scope
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Track exam schedules, target scores, and mark off study checklist topics.
+            Track exam schedules, target scores, and mark off study checklist
+            topics.
           </p>
         </div>
 
@@ -83,7 +92,9 @@ export default function ExamCountdown() {
               <div className="flex items-center gap-3 mb-2">
                 <span
                   className="rounded-full px-3 py-1 text-xs font-extrabold text-white"
-                  style={{ backgroundColor: getCourseColor(selectedExam.courseId) }}
+                  style={{
+                    backgroundColor: getCourseColor(selectedExam.courseId),
+                  }}
                 >
                   {getCourseCode(selectedExam.courseId)}
                 </span>
@@ -163,8 +174,8 @@ export default function ExamCountdown() {
                 Study Scope Checklist
               </h3>
               <span className="text-xs font-semibold text-slate-400">
-                {selectedExam.checklist?.filter((c) => c.completed).length || 0} /{" "}
-                {selectedExam.checklist?.length || 0} Topics Mastered
+                {selectedExam.checklist?.filter((c) => c.completed).length || 0}{" "}
+                / {selectedExam.checklist?.length || 0} Topics Mastered
               </span>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   BookOpen,
   Plus,
@@ -15,7 +15,8 @@ import {
 import { useStudy } from "../context/StudyContext";
 
 export default function Courses() {
-  const { courses, tasks, assignments, exams, notes, deleteCourse, openModal } = useStudy();
+  const { courses, tasks, assignments, exams, notes, deleteCourse, openModal } =
+    useStudy();
   const [selectedCourseDetail, setSelectedCourseDetail] = useState(null);
 
   return (
@@ -27,7 +28,8 @@ export default function Courses() {
             Course Directory
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Manage your enrolled subjects, schedules, credit hours, and grade targets.
+            Manage your enrolled subjects, schedules, credit hours, and grade
+            targets.
           </p>
         </div>
 
@@ -44,7 +46,9 @@ export default function Courses() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {courses.map((course) => {
           const courseTasks = tasks.filter((t) => t.courseId === course.id);
-          const courseAssignments = assignments.filter((a) => a.courseId === course.id);
+          const courseAssignments = assignments.filter(
+            (a) => a.courseId === course.id,
+          );
           const courseExams = exams.filter((e) => e.courseId === course.id);
           const courseNotes = notes.filter((n) => n.courseId === course.id);
 
@@ -108,7 +112,8 @@ export default function Courses() {
               <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-4 border border-slate-200/60 dark:border-slate-700/50 space-y-2">
                 <div className="flex items-center justify-between text-xs font-semibold">
                   <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                    <Award className="h-3.5 w-3.5 text-amber-500" /> Current Score
+                    <Award className="h-3.5 w-3.5 text-amber-500" /> Current
+                    Score
                   </span>
                   <span className="text-slate-900 dark:text-white">
                     {course.currentGrade}% (Goal: {course.gradeGoal})
@@ -211,7 +216,9 @@ export default function Courses() {
                         <span className="font-semibold text-slate-800 dark:text-slate-200">
                           {n.title}
                         </span>
-                        <span className="text-[10px] text-slate-400">{n.category}</span>
+                        <span className="text-[10px] text-slate-400">
+                          {n.category}
+                        </span>
                       </div>
                     ))}
                 </div>

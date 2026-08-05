@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   BookOpen,
   Plus,
@@ -32,7 +32,7 @@ export default function Assignments() {
   ];
 
   const filteredAssignments = assignments.filter(
-    (a) => activeTab === "all" || a.status === activeTab
+    (a) => activeTab === "all" || a.status === activeTab,
   );
 
   const getCourseCode = (courseId) => {
@@ -103,12 +103,15 @@ export default function Assignments() {
       <div className="glass-card rounded-3xl p-6 space-y-4">
         {filteredAssignments.length === 0 ? (
           <p className="py-12 text-center text-sm text-slate-400">
-            No assignments found under <span className="font-semibold">{activeTab}</span>.
+            No assignments found under{" "}
+            <span className="font-semibold">{activeTab}</span>.
           </p>
         ) : (
           filteredAssignments.map((item) => {
             const scorePct =
-              item.score !== null ? Math.round((item.score / item.maxScore) * 100) : null;
+              item.score !== null
+                ? Math.round((item.score / item.maxScore) * 100)
+                : null;
 
             return (
               <div
@@ -124,7 +127,9 @@ export default function Assignments() {
                     <div className="flex items-center gap-2">
                       <span
                         className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
-                        style={{ backgroundColor: getCourseColor(item.courseId) }}
+                        style={{
+                          backgroundColor: getCourseColor(item.courseId),
+                        }}
                       >
                         {getCourseCode(item.courseId)}
                       </span>
@@ -157,8 +162,8 @@ export default function Assignments() {
                           scorePct >= 90
                             ? "text-emerald-500"
                             : scorePct >= 80
-                            ? "text-amber-500"
-                            : "text-rose-500"
+                              ? "text-amber-500"
+                              : "text-rose-500"
                         }`}
                       >
                         {scorePct}% Grade
