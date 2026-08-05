@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   FileText,
   Plus,
@@ -14,21 +14,26 @@ import {
 import { useStudy } from "../context/StudyContext";
 
 export default function Notes() {
-  const { notes, courses, toggleFavoriteNote, deleteNote, openModal } = useStudy();
+  const { notes, courses, toggleFavoriteNote, deleteNote, openModal } =
+    useStudy();
 
-  const [selectedNoteId, setSelectedNoteId] = useState(() => notes[0]?.id || null);
+  const [selectedNoteId, setSelectedNoteId] = useState(
+    () => notes[0]?.id || null,
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCourseFilter, setSelectedCourseFilter] = useState("all");
 
   const filteredNotes = notes.filter((n) => {
-    const matchesCourse = selectedCourseFilter === "all" || n.courseId === selectedCourseFilter;
+    const matchesCourse =
+      selectedCourseFilter === "all" || n.courseId === selectedCourseFilter;
     const matchesSearch =
       n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       n.content.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCourse && matchesSearch;
   });
 
-  const activeNote = notes.find((n) => n.id === selectedNoteId) || filteredNotes[0] || notes[0];
+  const activeNote =
+    notes.find((n) => n.id === selectedNoteId) || filteredNotes[0] || notes[0];
 
   const getCourseCode = (courseId) => {
     const c = courses.find((crs) => crs.id === courseId);
@@ -42,7 +47,9 @@ export default function Notes() {
 
   const handleExportMarkdown = (note) => {
     if (!note) return;
-    const blob = new Blob([`# ${note.title}\n\n${note.content}`], { type: "text/markdown" });
+    const blob = new Blob([`# ${note.title}\n\n${note.content}`], {
+      type: "text/markdown",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -62,7 +69,8 @@ export default function Notes() {
             Notes & Study Guides
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Capture lectures, markdown notes, formula cheatsheets, and export anytime.
+            Capture lectures, markdown notes, formula cheatsheets, and export
+            anytime.
           </p>
         </div>
 
@@ -76,7 +84,7 @@ export default function Notes() {
       </div>
 
       {/* Two Column Split Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[600px]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-150">
         {/* Left Column: Notes Directory */}
         <div className="lg:col-span-5 glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4">
           <div className="space-y-3">
@@ -113,9 +121,11 @@ export default function Notes() {
           </div>
 
           {/* List of Notes */}
-          <div className="space-y-2.5 overflow-y-auto max-h-[500px] pr-1 flex-1">
+          <div className="space-y-2.5 overflow-y-auto max-h-125 pr-1 flex-1">
             {filteredNotes.length === 0 ? (
-              <p className="py-12 text-center text-xs text-slate-400">No notes match.</p>
+              <p className="py-12 text-center text-xs text-slate-400">
+                No notes match.
+              </p>
             ) : (
               filteredNotes.map((n) => {
                 const isSelected = n.id === activeNote?.id;
@@ -132,12 +142,12 @@ export default function Notes() {
                     <div className="flex items-center justify-between">
                       <span
                         className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                          isSelected
-                            ? "bg-white/20 text-white"
-                            : "text-white"
+                          isSelected ? "bg-white/20 text-white" : "text-white"
                         }`}
                         style={{
-                          backgroundColor: isSelected ? undefined : getCourseColor(n.courseId),
+                          backgroundColor: isSelected
+                            ? undefined
+                            : getCourseColor(n.courseId),
                         }}
                       >
                         {getCourseCode(n.courseId)}
@@ -152,17 +162,21 @@ export default function Notes() {
                           n.favorite
                             ? "text-amber-400"
                             : isSelected
-                            ? "text-white/60 hover:text-white"
-                            : "text-slate-300 hover:text-amber-400"
+                              ? "text-white/60 hover:text-white"
+                              : "text-slate-300 hover:text-amber-400"
                         }`}
                       >
-                        <Star className={`h-4 w-4 ${n.favorite ? "fill-amber-400" : ""}`} />
+                        <Star
+                          className={`h-4 w-4 ${n.favorite ? "fill-amber-400" : ""}`}
+                        />
                       </button>
                     </div>
 
                     <h4
                       className={`text-sm font-bold mt-2 ${
-                        isSelected ? "text-white" : "text-slate-900 dark:text-white"
+                        isSelected
+                          ? "text-white"
+                          : "text-slate-900 dark:text-white"
                       }`}
                     >
                       {n.title}
@@ -170,7 +184,9 @@ export default function Notes() {
 
                     <p
                       className={`text-xs line-clamp-2 mt-1 ${
-                        isSelected ? "text-indigo-100" : "text-slate-500 dark:text-slate-400"
+                        isSelected
+                          ? "text-indigo-100"
+                          : "text-slate-500 dark:text-slate-400"
                       }`}
                     >
                       {n.content.replace(/[#*`]/g, "")}
@@ -191,7 +207,9 @@ export default function Notes() {
                   <div className="flex items-center gap-2">
                     <span
                       className="rounded-full px-3 py-1 text-xs font-extrabold text-white"
-                      style={{ backgroundColor: getCourseColor(activeNote.courseId) }}
+                      style={{
+                        backgroundColor: getCourseColor(activeNote.courseId),
+                      }}
                     >
                       {getCourseCode(activeNote.courseId)}
                     </span>
@@ -241,12 +259,14 @@ export default function Notes() {
               </div>
 
               {/* Formatted Markdown Content Body */}
-              <div className="flex-1 overflow-y-auto max-h-[420px] pr-2 space-y-3 font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
+              <div className="flex-1 overflow-y-auto max-h-105 pr-2 space-y-3 font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
                 {activeNote.content}
               </div>
             </>
           ) : (
-            <div className="py-24 text-center text-slate-400">Select a note to view canvas.</div>
+            <div className="py-24 text-center text-slate-400">
+              Select a note to view canvas.
+            </div>
           )}
         </div>
       </div>

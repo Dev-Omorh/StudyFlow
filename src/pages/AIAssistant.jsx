@@ -1,5 +1,14 @@
-import React, { useState } from "react";
-import { Bot, Send, Sparkles, BookOpen, HelpCircle, Calendar, Zap, User } from "lucide-react";
+import { useState } from "react";
+import {
+  Bot,
+  Send,
+  Sparkles,
+  BookOpen,
+  HelpCircle,
+  Calendar,
+  Zap,
+  User,
+} from "lucide-react";
 import { useStudy } from "../context/StudyContext";
 
 export default function AIAssistant() {
@@ -83,7 +92,7 @@ export default function AIAssistant() {
             <button
               key={idx}
               onClick={() => handleSend(qp.label)}
-              className="flex-shrink-0 inline-flex items-center gap-2 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm transition"
+              className="shrink-0 inline-flex items-center gap-2 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-sm transition"
             >
               <Icon className="h-3.5 w-3.5 text-indigo-500" />
               <span>{qp.label}</span>
@@ -93,7 +102,7 @@ export default function AIAssistant() {
       </div>
 
       {/* Chat Container */}
-      <div className="glass-card rounded-3xl p-6 flex flex-col justify-between h-[520px]">
+      <div className="glass-card rounded-3xl p-6 flex flex-col justify-between h-130">
         <div className="space-y-4 overflow-y-auto pr-2 flex-1">
           {messages.map((msg) => (
             <div
@@ -103,13 +112,17 @@ export default function AIAssistant() {
               }`}
             >
               <div
-                className={`flex h-8 w-8 items-center justify-center rounded-xl font-bold text-xs flex-shrink-0 ${
+                className={`flex h-8 w-8 items-center justify-center rounded-xl font-bold text-xs shrink-0 ${
                   msg.sender === "user"
                     ? "bg-indigo-600 text-white"
                     : "bg-slate-200 dark:bg-slate-800 text-indigo-500"
                 }`}
               >
-                {msg.sender === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                {msg.sender === "user" ? (
+                  <User className="h-4 w-4" />
+                ) : (
+                  <Bot className="h-4 w-4" />
+                )}
               </div>
 
               <div

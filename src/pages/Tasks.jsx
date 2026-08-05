@@ -273,7 +273,7 @@ export default function Tasks() {
                   </span>
                 </div>
 
-                <div className="space-y-3 flex-1 min-h-[300px]">
+                <div className="space-y-3 flex-1 min-h-75">
                   {colTasks.map((task) => (
                     <div
                       key={task.id}
