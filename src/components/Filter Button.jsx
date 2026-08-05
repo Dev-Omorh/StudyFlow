@@ -6,4 +6,4 @@ function FilterButton() {
   );
 }
 
-export default FilterButton;
+export default FilterButton
