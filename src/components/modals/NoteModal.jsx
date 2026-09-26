@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { X, Check } from "lucide-react";
 import { useStudy } from "../../context/StudyContext";
 
 export default function NoteModal() {
-  const { activeModal, closeModal, editingItem, addNote, updateNote, courses } = useStudy();
+  const { activeModal, closeModal, editingItem, addNote, updateNote, courses } =
+    useStudy();
 
   const [title, setTitle] = useState("");
   const [courseId, setCourseId] = useState("");
@@ -14,7 +15,7 @@ export default function NoteModal() {
   useEffect(() => {
     if (editingItem) {
       setTitle(editingItem.title || "");
-      setCourseId(editingItem.courseId || (courses[0]?.id || ""));
+      setCourseId(editingItem.courseId || courses[0]?.id || "");
       setCategory(editingItem.category || "Lecture Notes");
       setTagsStr(editingItem.tags ? editingItem.tags.join(", ") : "");
       setContent(editingItem.content || "");
@@ -23,7 +24,9 @@ export default function NoteModal() {
       setCourseId(courses[0]?.id || "");
       setCategory("Lecture Notes");
       setTagsStr("Study Notes");
-      setContent("# Key Concepts\n\n- Point 1\n- Point 2\n\n### Summary\nWrite main key takeaways here.");
+      setContent(
+        "# Key Concepts\n\n- Point 1\n- Point 2\n\n### Summary\nWrite main key takeaways here.",
+      );
     }
   }, [editingItem, courses]);
 

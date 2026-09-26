@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { X, Check } from "lucide-react";
 import { useStudy } from "../../context/StudyContext";
 
 export default function AssignmentModal() {
-  const { activeModal, closeModal, editingItem, addAssignment, updateAssignment, courses } = useStudy();
+  const {
+    activeModal,
+    closeModal,
+    editingItem,
+    addAssignment,
+    updateAssignment,
+    courses,
+  } = useStudy();
 
   const [title, setTitle] = useState("");
   const [courseId, setCourseId] = useState("");
@@ -18,11 +25,15 @@ export default function AssignmentModal() {
   useEffect(() => {
     if (editingItem) {
       setTitle(editingItem.title || "");
-      setCourseId(editingItem.courseId || (courses[0]?.id || ""));
+      setCourseId(editingItem.courseId || courses[0]?.id || "");
       setDueDate(editingItem.dueDate || new Date().toISOString().split("T")[0]);
       setStatus(editingItem.status || "not_started");
       setPriority(editingItem.priority || "medium");
-      setScore(editingItem.score !== null && editingItem.score !== undefined ? editingItem.score : "");
+      setScore(
+        editingItem.score !== null && editingItem.score !== undefined
+          ? editingItem.score
+          : "",
+      );
       setMaxScore(editingItem.maxScore || 100);
       setWeight(editingItem.weight || 15);
       setDescription(editingItem.description || "");

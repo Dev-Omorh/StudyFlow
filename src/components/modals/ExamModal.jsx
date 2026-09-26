@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { X, Check, Plus, Trash2 } from "lucide-react";
 import { useStudy } from "../../context/StudyContext";
 
 export default function ExamModal() {
-  const { activeModal, closeModal, editingItem, addExam, updateExam, courses } = useStudy();
+  const { activeModal, closeModal, editingItem, addExam, updateExam, courses } =
+    useStudy();
 
   const [title, setTitle] = useState("");
   const [courseId, setCourseId] = useState("");
@@ -17,14 +18,18 @@ export default function ExamModal() {
   useEffect(() => {
     if (editingItem) {
       setTitle(editingItem.title || "");
-      setCourseId(editingItem.courseId || (courses[0]?.id || ""));
-      setExamDate(editingItem.examDate ? editingItem.examDate.substring(0, 16) : "");
+      setCourseId(editingItem.courseId || courses[0]?.id || "");
+      setExamDate(
+        editingItem.examDate ? editingItem.examDate.substring(0, 16) : "",
+      );
       setLocation(editingItem.location || "");
       setWeight(editingItem.weight || 25);
       setTargetGrade(editingItem.targetGrade || "A");
       setTopics(editingItem.checklist || []);
     } else {
-      const tomorrow = new Date(Date.now() + 7 * 86400000).toISOString().substring(0, 16);
+      const tomorrow = new Date(Date.now() + 7 * 86400000)
+        .toISOString()
+        .substring(0, 16);
       setTitle("");
       setCourseId(courses[0]?.id || "");
       setExamDate(tomorrow);
@@ -32,7 +37,11 @@ export default function ExamModal() {
       setWeight(25);
       setTargetGrade("A");
       setTopics([
-        { id: "t_1", topic: "Chapter 1 & 2 Core Definitions", completed: false },
+        {
+          id: "t_1",
+          topic: "Chapter 1 & 2 Core Definitions",
+          completed: false,
+        },
         { id: "t_2", topic: "Formula derivations & proofs", completed: false },
       ]);
     }
@@ -44,7 +53,11 @@ export default function ExamModal() {
     if (!newTopicInput.trim()) return;
     setTopics((prev) => [
       ...prev,
-      { id: "topic_" + Date.now(), topic: newTopicInput.trim(), completed: false },
+      {
+        id: "topic_" + Date.now(),
+        topic: newTopicInput.trim(),
+        completed: false,
+      },
     ]);
     setNewTopicInput("");
   };

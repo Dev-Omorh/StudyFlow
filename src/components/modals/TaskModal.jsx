@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { X, Check } from "lucide-react";
 import { useStudy } from "../../context/StudyContext";
 
 export default function TaskModal() {
-  const { activeModal, closeModal, editingItem, addTask, updateTask, courses } = useStudy();
+  const { activeModal, closeModal, editingItem, addTask, updateTask, courses } =
+    useStudy();
 
   const [title, setTitle] = useState("");
   const [courseId, setCourseId] = useState("");
@@ -16,7 +17,7 @@ export default function TaskModal() {
   useEffect(() => {
     if (editingItem) {
       setTitle(editingItem.title || "");
-      setCourseId(editingItem.courseId || (courses[0]?.id || ""));
+      setCourseId(editingItem.courseId || courses[0]?.id || "");
       setDueDate(editingItem.dueDate || new Date().toISOString().split("T")[0]);
       setPriority(editingItem.priority || "medium");
       setStatus(editingItem.status || "todo");

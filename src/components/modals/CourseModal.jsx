@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { X, Check } from "lucide-react";
 import { useStudy } from "../../context/StudyContext";
 
 export default function CourseModal() {
-  const { activeModal, closeModal, editingItem, addCourse, updateCourse } = useStudy();
+  const { activeModal, closeModal, editingItem, addCourse, updateCourse } =
+    useStudy();
 
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
@@ -199,13 +200,22 @@ export default function CourseModal() {
               Color Tag
             </label>
             <div className="flex items-center gap-3">
-              {["#6366f1", "#ec4899", "#10b981", "#f59e0b", "#8b5cf6", "#06b6d4"].map((c) => (
+              {[
+                "#6366f1",
+                "#ec4899",
+                "#10b981",
+                "#f59e0b",
+                "#8b5cf6",
+                "#06b6d4",
+              ].map((c) => (
                 <button
                   key={c}
                   type="button"
                   onClick={() => setColor(c)}
                   className={`h-7 w-7 rounded-full border-2 transition ${
-                    color === c ? "border-white scale-110 shadow-md" : "border-transparent"
+                    color === c
+                      ? "border-white scale-110 shadow-md"
+                      : "border-transparent"
                   }`}
                   style={{ backgroundColor: c }}
                 />
