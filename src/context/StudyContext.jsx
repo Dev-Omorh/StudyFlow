@@ -1,37 +1,19 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StudyContext } from "./studyContext";
 import {
-  initialCourses,
-  initialTasks,
-  initialAssignments,
-  initialExams,
-  initialNotes,
-  initialNotifications,
   initialUserProfile,
 } from "../utils/seedData";
 import { getStoredItem, setStoredItem, STORAGE_KEYS } from "../utils/storage";
+import { api } from "../services/api";
 
 export const StudyProvider = ({ children }) => {
-  // Persistence state
-  const [courses, setCourses] = useState(() =>
-    getStoredItem(STORAGE_KEYS.COURSES, initialCourses)
-  );
-  const [tasks, setTasks] = useState(() =>
-    getStoredItem(STORAGE_KEYS.TASKS, initialTasks)
-  );
-  const [assignments, setAssignments] = useState(() =>
-    getStoredItem(STORAGE_KEYS.ASSIGNMENTS, initialAssignments)
-  );
-  const [exams, setExams] = useState(() =>
-    getStoredItem(STORAGE_KEYS.EXAMS, initialExams)
-  );
-  const [notes, setNotes] = useState(() =>
-    getStoredItem(STORAGE_KEYS.NOTES, initialNotes)
-  );
-  const [notifications, setNotifications] = useState(() =>
-    getStoredItem(STORAGE_KEYS.NOTIFICATIONS, initialNotifications)
-  );
-  const [userProfile, setUserProfile] = useState(() =>
+  const [courses, setCourses] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [exams, setExams] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [userProfile] = useState(() =>
     getStoredItem(STORAGE_KEYS.USER, initialUserProfile)
   );
   const [isDarkMode, setIsDarkMode] = useState(() =>
@@ -43,31 +25,59 @@ export const StudyProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeModal, setActiveModal] = useState(null); // 'task' | 'course' | 'assignment' | 'exam' | 'note' | null
   const [editingItem, setEditingItem] = useState(null);
+  const [isStudyDataLoading, setIsStudyDataLoading] = useState(true);
+  const [apiError, setApiError] = useState("");
 
-  // Sync effect to localStorage & html class
-  useEffect(() => {
-    setStoredItem(STORAGE_KEYS.COURSES, courses);
-  }, [courses]);
+  const refreshStudyData = useCallback(async () => {
+    setIsStudyDataLoading(true);
+    setApiError("");
+    try {
+      const [courseData, taskData, assignmentData, examData, noteData, notificationData] =
+        await Promise.all([
+          api.get("/courses"),
+          api.get("/tasks"),
+          api.get("/assignments"),
+          api.get("/exams"),
+          api.get("/notes"),
+          api.get("/notifications"),
+        ]);
+      const collections = [
+        ["courses", courseData],
+        ["tasks", taskData],
+        ["assignments", assignmentData],
+        ["exams", examData],
+        ["notes", noteData],
+        ["notifications", notificationData],
+      ];
+      for (const [name, value] of collections) {
+        if (!Array.isArray(value)) {
+          throw new Error(`The API returned an invalid ${name} collection.`);
+        }
+      }
+      setCourses(courseData);
+      setTasks(taskData);
+      setAssignments(assignmentData);
+      setExams(examData);
+      setNotes(noteData);
+      setNotifications(notificationData);
+    } catch (error) {
+      console.error("Unable to load study data:", error);
+      setApiError(error.message || "Unable to load study data.");
+    } finally {
+      setIsStudyDataLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    setStoredItem(STORAGE_KEYS.TASKS, tasks);
-  }, [tasks]);
-
-  useEffect(() => {
-    setStoredItem(STORAGE_KEYS.ASSIGNMENTS, assignments);
-  }, [assignments]);
-
-  useEffect(() => {
-    setStoredItem(STORAGE_KEYS.EXAMS, exams);
-  }, [exams]);
-
-  useEffect(() => {
-    setStoredItem(STORAGE_KEYS.NOTES, notes);
-  }, [notes]);
-
-  useEffect(() => {
-    setStoredItem(STORAGE_KEYS.NOTIFICATIONS, notifications);
-  }, [notifications]);
+    let isMounted = true;
+    const timeoutId = window.setTimeout(() => {
+      if (isMounted) refreshStudyData();
+    }, 0);
+    return () => {
+      isMounted = false;
+      window.clearTimeout(timeoutId);
+    };
+  }, [refreshStudyData]);
 
   useEffect(() => {
     setStoredItem(STORAGE_KEYS.THEME, isDarkMode);
@@ -77,6 +87,22 @@ export const StudyProvider = ({ children }) => {
       document.documentElement.classList.remove("dark");
     }
   }, [isDarkMode]);
+
+  const runApiRequest = async (request) => {
+    setApiError("");
+    try {
+      return await request();
+    } catch (error) {
+      console.error("Study data request failed:", error);
+      setApiError(error.message || "The request could not be completed.");
+      return null;
+    }
+  };
+
+  const withoutServerManagedId = (value) =>
+    Object.fromEntries(
+      Object.entries(value).filter(([key]) => key !== "id"),
+    );
 
   // Helper toggle dark mode
   const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
@@ -93,200 +119,266 @@ export const StudyProvider = ({ children }) => {
   };
 
   // --- CRUD: Tasks ---
-  const addTask = (taskData) => {
-    const newTask = {
-      ...taskData,
-      id: "t_" + Date.now(),
-      status: taskData.status || "todo",
-      tags: taskData.tags || ["General"],
-    };
+  const addTask = async (taskData) => {
+    const newTask = await runApiRequest(() => api.post("/tasks", taskData));
+    if (!newTask) return;
+    if (!newTask.id) {
+      setApiError("The API did not return an ID for the new task.");
+      return;
+    }
     setTasks((prev) => [newTask, ...prev]);
     closeModal();
   };
 
-  const updateTask = (id, updatedFields) => {
+  const updateTask = async (id, updatedFields) => {
+    const updatedTask = await runApiRequest(() =>
+      api.put(`/tasks/${id}`, updatedFields),
+    );
+    if (!updatedTask) return;
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...updatedFields } : t))
+      prev.map((task) => (task.id === id ? updatedTask : task)),
     );
     closeModal();
   };
 
-  const deleteTask = (id) => {
+  const deleteTask = async (id) => {
+    const deleted = await runApiRequest(() => api.delete(`/tasks/${id}`));
+    if (deleted === null) return;
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const toggleTaskStatus = (id) => {
+  const toggleTaskStatus = async (id) => {
+    const task = tasks.find((item) => item.id === id);
+    if (!task) return;
+    const status =
+      task.status === "todo"
+        ? "in_progress"
+        : task.status === "in_progress"
+          ? "completed"
+          : "todo";
+    const updatedTask = await runApiRequest(() =>
+      api.patch(`/tasks/${id}`, { status }),
+    );
+    if (!updatedTask) return;
     setTasks((prev) =>
-      prev.map((t) => {
-        if (t.id === id) {
-          const nextStatus =
-            t.status === "todo"
-              ? "in_progress"
-              : t.status === "in_progress"
-              ? "completed"
-              : "todo";
-          return { ...t, status: nextStatus };
-        }
-        return t;
-      })
+      prev.map((item) => (item.id === id ? updatedTask : item)),
     );
   };
 
   // --- CRUD: Courses ---
-  const addCourse = (courseData) => {
-    const newCourse = {
-      ...courseData,
-      id: "c_" + Date.now(),
-      currentGrade: Number(courseData.currentGrade) || 90.0,
-      creditHours: Number(courseData.creditHours) || 3,
-      color: courseData.color || "#6366f1",
-    };
+  const addCourse = async (courseData) => {
+    const newCourse = await runApiRequest(() =>
+      api.post("/courses", courseData),
+    );
+    if (!newCourse) return;
+    if (!newCourse.id) {
+      setApiError("The API did not return an ID for the new course.");
+      return;
+    }
     setCourses((prev) => [...prev, newCourse]);
     closeModal();
   };
 
-  const updateCourse = (id, updatedFields) => {
+  const updateCourse = async (id, updatedFields) => {
+    const updatedCourse = await runApiRequest(() =>
+      api.put(`/courses/${id}`, updatedFields),
+    );
+    if (!updatedCourse) return;
     setCourses((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, ...updatedFields } : c))
+      prev.map((course) => (course.id === id ? updatedCourse : course)),
     );
     closeModal();
   };
 
-  const deleteCourse = (id) => {
+  const deleteCourse = async (id) => {
+    const deleted = await runApiRequest(() => api.delete(`/courses/${id}`));
+    if (deleted === null) return;
     setCourses((prev) => prev.filter((c) => c.id !== id));
   };
 
   // --- CRUD: Assignments ---
-  const addAssignment = (assignData) => {
-    const newAssign = {
-      ...assignData,
-      id: "a_" + Date.now(),
-      status: assignData.status || "not_started",
-      score: assignData.score !== "" ? Number(assignData.score) : null,
-      maxScore: Number(assignData.maxScore) || 100,
-      weight: Number(assignData.weight) || 10,
-    };
+  const addAssignment = async (assignData) => {
+    const newAssign = await runApiRequest(() =>
+      api.post("/assignments", assignData),
+    );
+    if (!newAssign) return;
+    if (!newAssign.id) {
+      setApiError("The API did not return an ID for the new assignment.");
+      return;
+    }
     setAssignments((prev) => [newAssign, ...prev]);
     closeModal();
   };
 
-  const updateAssignment = (id, updatedFields) => {
+  const updateAssignment = async (id, updatedFields) => {
+    const updatedAssignment = await runApiRequest(() =>
+      api.put(`/assignments/${id}`, updatedFields),
+    );
+    if (!updatedAssignment) return;
     setAssignments((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, ...updatedFields } : a))
+      prev.map((assignment) =>
+        assignment.id === id ? updatedAssignment : assignment,
+      ),
     );
     closeModal();
   };
 
-  const deleteAssignment = (id) => {
+  const deleteAssignment = async (id) => {
+    const deleted = await runApiRequest(() =>
+      api.delete(`/assignments/${id}`),
+    );
+    if (deleted === null) return;
     setAssignments((prev) => prev.filter((a) => a.id !== id));
   };
 
-  const cycleAssignmentStatus = (id) => {
+  const cycleAssignmentStatus = async (id) => {
+    const assignment = assignments.find((item) => item.id === id);
+    if (!assignment) return;
+    const stages = ["not_started", "in_progress", "submitted", "graded"];
+    const nextStatus =
+      stages[(stages.indexOf(assignment.status) + 1) % stages.length];
+    const updatedAssignment = await runApiRequest(() =>
+      api.patch(`/assignments/${id}`, { status: nextStatus }),
+    );
+    if (!updatedAssignment) return;
     setAssignments((prev) =>
-      prev.map((a) => {
-        if (a.id === id) {
-          const stages = ["not_started", "in_progress", "submitted", "graded"];
-          const nextIdx = (stages.indexOf(a.status) + 1) % stages.length;
-          return { ...a, status: stages[nextIdx] };
-        }
-        return a;
-      })
+      prev.map((item) => (item.id === id ? updatedAssignment : item)),
     );
   };
 
   // --- CRUD: Exams ---
-  const addExam = (examData) => {
-    const newExam = {
+  const addExam = async (examData) => {
+    const payload = {
       ...examData,
-      id: "e_" + Date.now(),
-      checklist: examData.checklist || [],
+      checklist: examData.checklist?.map(withoutServerManagedId) || [],
     };
+    const newExam = await runApiRequest(() => api.post("/exams", payload));
+    if (!newExam) return;
+    if (!newExam.id) {
+      setApiError("The API did not return an ID for the new exam.");
+      return;
+    }
     setExams((prev) => [...prev, newExam]);
     closeModal();
   };
 
-  const updateExam = (id, updatedFields) => {
+  const updateExam = async (id, updatedFields) => {
+    const payload = {
+      ...updatedFields,
+      checklist: updatedFields.checklist?.map(withoutServerManagedId),
+    };
+    const updatedExam = await runApiRequest(() =>
+      api.put(`/exams/${id}`, payload),
+    );
+    if (!updatedExam) return;
     setExams((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, ...updatedFields } : e))
+      prev.map((exam) => (exam.id === id ? updatedExam : exam)),
     );
     closeModal();
   };
 
-  const deleteExam = (id) => {
+  const deleteExam = async (id) => {
+    const deleted = await runApiRequest(() => api.delete(`/exams/${id}`));
+    if (deleted === null) return;
     setExams((prev) => prev.filter((e) => e.id !== id));
   };
 
-  const toggleExamTopic = (examId, topicId) => {
+  const toggleExamTopic = async (examId, topicId) => {
+    const exam = exams.find((item) => item.id === examId);
+    const topic = exam?.checklist?.find((item) => item.id === topicId);
+    if (!exam || !topic) return;
+    const updatedExam = await runApiRequest(() =>
+      api.patch(`/exams/${examId}`, {
+        checklist: exam.checklist.map((item) =>
+          item.id === topicId
+            ? { ...item, completed: !item.completed }
+            : item,
+        ),
+      }),
+    );
+    if (!updatedExam) return;
     setExams((prev) =>
-      prev.map((exam) => {
-        if (exam.id === examId) {
-          return {
-            ...exam,
-            checklist: exam.checklist.map((item) =>
-              item.id === topicId
-                ? { ...item, completed: !item.completed }
-                : item
-            ),
-          };
-        }
-        return exam;
-      })
+      prev.map((item) => (item.id === examId ? updatedExam : item)),
     );
   };
 
   // --- CRUD: Notes ---
-  const addNote = (noteData) => {
-    const newNote = {
-      ...noteData,
-      id: "n_" + Date.now(),
-      updatedAt: new Date().toISOString(),
-      favorite: false,
-    };
+  const addNote = async (noteData) => {
+    const newNote = await runApiRequest(() => api.post("/notes", noteData));
+    if (!newNote) return;
+    if (!newNote.id) {
+      setApiError("The API did not return an ID for the new note.");
+      return;
+    }
     setNotes((prev) => [newNote, ...prev]);
     closeModal();
   };
 
-  const updateNote = (id, updatedFields) => {
+  const updateNote = async (id, updatedFields) => {
+    const updatedNote = await runApiRequest(() =>
+      api.put(`/notes/${id}`, updatedFields),
+    );
+    if (!updatedNote) return;
     setNotes((prev) =>
-      prev.map((n) =>
-        n.id === id
-          ? { ...n, ...updatedFields, updatedAt: new Date().toISOString() }
-          : n
-      )
+      prev.map((note) => (note.id === id ? updatedNote : note)),
     );
     closeModal();
   };
 
-  const deleteNote = (id) => {
+  const deleteNote = async (id) => {
+    const deleted = await runApiRequest(() => api.delete(`/notes/${id}`));
+    if (deleted === null) return;
     setNotes((prev) => prev.filter((n) => n.id !== id));
   };
 
-  const toggleFavoriteNote = (id) => {
+  const toggleFavoriteNote = async (id) => {
+    const note = notes.find((item) => item.id === id);
+    if (!note) return;
+    const updatedNote = await runApiRequest(() =>
+      api.patch(`/notes/${id}`, { favorite: !note.favorite }),
+    );
+    if (!updatedNote) return;
     setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, favorite: !n.favorite } : n))
+      prev.map((item) => (item.id === id ? updatedNote : item)),
     );
   };
 
   // --- Notifications ---
-  const markNotificationAsRead = (id) => {
+  const markNotificationAsRead = async (id) => {
+    const notification = notifications.find((item) => item.id === id);
+    if (!notification) return;
+    const updatedNotification = await runApiRequest(() =>
+      api.patch(`/notifications/${id}`, { read: true }),
+    );
+    if (!updatedNotification) return;
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+      prev.map((item) => (item.id === id ? updatedNotification : item)),
     );
   };
 
-  const clearAllNotifications = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  };
-
-  // Reset to initial Seed Data
-  const resetToSeedData = () => {
-    setCourses(initialCourses);
-    setTasks(initialTasks);
-    setAssignments(initialAssignments);
-    setExams(initialExams);
-    setNotes(initialNotes);
-    setNotifications(initialNotifications);
-    setUserProfile(initialUserProfile);
+  const clearAllNotifications = async () => {
+    const unread = notifications.filter((notification) => !notification.read);
+    const updatedNotifications = await Promise.all(
+      unread.map((notification) =>
+        runApiRequest(() =>
+          api.patch(`/notifications/${notification.id}`, { read: true }),
+        ),
+      ),
+    );
+    if (updatedNotifications.some((notification) => notification === null)) {
+      return;
+    }
+    const updatesById = new Map(
+      updatedNotifications.map((notification) => [
+        notification.id,
+        notification,
+      ]),
+    );
+    setNotifications((prev) =>
+      prev.map((notification) =>
+        updatesById.get(notification.id) || notification,
+      ),
+    );
   };
 
   return (
@@ -299,6 +391,9 @@ export const StudyProvider = ({ children }) => {
         notes,
         notifications,
         userProfile,
+        isStudyDataLoading,
+        apiError,
+        clearApiError: () => setApiError(""),
         isDarkMode,
         toggleDarkMode,
         // modal state
@@ -337,7 +432,7 @@ export const StudyProvider = ({ children }) => {
         // notifications & reset
         markNotificationAsRead,
         clearAllNotifications,
-        resetToSeedData,
+        refreshStudyData,
       }}
     >
       {children}

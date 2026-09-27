@@ -7,8 +7,10 @@ import CourseModal from "../modals/CourseModal";
 import AssignmentModal from "../modals/AssignmentModal";
 import ExamModal from "../modals/ExamModal";
 import NoteModal from "../modals/NoteModal";
+import { useStudy } from "../../context/useStudy";
 
 export default function AppLayout({ children }) {
+  const { apiError, clearApiError } = useStudy();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
@@ -34,6 +36,21 @@ export default function AppLayout({ children }) {
         />
 
         <main className="mx-auto w-full max-w-7xl min-w-0 flex-1 space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-8 animate-in fade-in duration-300">
+          {apiError && (
+            <div
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-300"
+              role="alert"
+            >
+              <span>{apiError}</span>
+              <button
+                type="button"
+                onClick={clearApiError}
+                className="min-h-11 rounded-lg px-3 font-semibold hover:bg-rose-100 dark:hover:bg-rose-900/50"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
           {children}
         </main>
       </div>

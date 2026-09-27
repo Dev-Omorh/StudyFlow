@@ -12,12 +12,12 @@ StudyFlow is a responsive student productivity single-page application for organ
 - Notes workspace with search, course filtering, favorites, and Markdown export.
 - Study assistant demo with suggested prompts and simulated responses.
 - Global search, notifications, quick-create menus, and light/dark themes.
-- Client-side persistence for study data and preferences using `localStorage`.
+- API-backed account sessions and study data, with the selected theme persisted in `localStorage`.
 - Responsive navigation drawer on small screens and adaptive page layouts.
 
 ## Current data and authentication model
 
-This repository contains a frontend-only application. Study data is managed by the React context in `src/context/StudyContext.jsx` and persisted in the browser with `localStorage`. The project does **not** currently provide API-backed authentication, a backend service, or study-data API endpoints. The roadmap in Settings is a feature poll, not implemented authentication or cloud storage. The AI assistant also uses simulated responses rather than a remote AI service.
+Authentication and study data are supplied by a separate backend API. The frontend uses `src/services/api.js` to call `/api/auth/*` and the `/api/{tasks,courses,assignments,exams,notes,notifications}` endpoints, attaching the stored bearer token to requests and clearing expired sessions on `401`. Study data is not stored as a local mock; only the theme preference and the fallback profile are browser-persisted. The roadmap in Settings is a feature poll, not a promise of implemented cloud features. The AI assistant currently uses simulated responses rather than a remote AI service.
 
 ## Technology
 
@@ -54,6 +54,9 @@ npm run preview
 | Path | Page |
 | --- | --- |
 | `/` | Dashboard |
+| `/login` | Sign in |
+| `/signup` | Create an account |
+| `/auth/callback` | Complete Google OAuth sign-in |
 | `/tasks` | Tasks |
 | `/courses` | Courses |
 | `/assignments` | Assignments |
@@ -62,7 +65,7 @@ npm run preview
 | `/ai-assistant` | Study assistant |
 | `/settings` | Settings and roadmap |
 
-Routes are declared in `src/App.jsx` using React Router. Unknown paths redirect to the dashboard.
+Routes are declared in `src/App.jsx` using React Router. Study pages are guarded by the `/api/auth/me` session check. The Google OAuth callback stores the returned `token` as `auth_token` and verifies it before returning to the app. Unknown paths redirect to the dashboard.
 
 ## Project structure
 
@@ -72,12 +75,16 @@ src/
 ├── App.css                  # Tailwind entry point
 ├── index.css                # Global theme and shared styles
 ├── components/
+│   ├── auth/                # Protected route guard
 │   ├── common/              # Global search and notification popover
 │   ├── layout/              # App shell, header, and responsive navigation
 │   └── modals/              # Create/edit forms for study data
 ├── context/
-│   └── StudyContext.jsx     # Shared application state and localStorage sync
-├── pages/                   # Dashboard and routed feature pages
+│   ├── AuthContext.jsx      # Login, signup, and session restoration
+│   └── StudyContext.jsx     # API-backed study data and shared UI state
+├── pages/                   # Auth pages and routed feature pages
+├── services/
+│   └── api.js               # Bearer-token fetch helper and 401 handling
 └── utils/                   # Seed data and localStorage helpers
 ```
 

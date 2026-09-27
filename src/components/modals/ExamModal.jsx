@@ -39,11 +39,10 @@ export default function ExamModal() {
       setTargetGrade("A");
       setTopics([
         {
-          id: "t_1",
           topic: "Chapter 1 & 2 Core Definitions",
           completed: false,
         },
-        { id: "t_2", topic: "Formula derivations & proofs", completed: false },
+        { topic: "Formula derivations & proofs", completed: false },
       ]);
     }
   }, [editingItem, courses]);
@@ -55,7 +54,6 @@ export default function ExamModal() {
     setTopics((prev) => [
       ...prev,
       {
-        id: "topic_" + Date.now(),
         topic: newTopicInput.trim(),
         completed: false,
       },
@@ -63,8 +61,8 @@ export default function ExamModal() {
     setNewTopicInput("");
   };
 
-  const handleRemoveTopic = (id) => {
-    setTopics((prev) => prev.filter((t) => t.id !== id));
+  const handleRemoveTopic = (topicIndex) => {
+    setTopics((prev) => prev.filter((_, index) => index !== topicIndex));
   };
 
   const handleSubmit = (e) => {
@@ -218,15 +216,15 @@ export default function ExamModal() {
             </div>
 
             <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-              {topics.map((t) => (
+              {topics.map((t, index) => (
                 <div
-                  key={t.id}
+                  key={t.id || `${t.topic}-${index}`}
                   className="flex items-center justify-between rounded-lg bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/50"
                 >
                   <span>{t.topic}</span>
                   <button
                     type="button"
-                    onClick={() => handleRemoveTopic(t.id)}
+                    onClick={() => handleRemoveTopic(index)}
                     className="text-slate-400 hover:text-rose-500"
                   >
                     <Trash2 className="h-3.5 w-3.5" />

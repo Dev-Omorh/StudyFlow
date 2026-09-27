@@ -14,7 +14,7 @@ import {
 import { useStudy } from "../context/useStudy";
 
 export default function Settings() {
-  const { isDarkMode, toggleDarkMode, resetToSeedData } =
+  const { isDarkMode, toggleDarkMode, refreshStudyData } =
     useStudy();
 
   const [votes, setVotes] = useState({
@@ -46,7 +46,7 @@ export default function Settings() {
           Settings & Future Roadmap
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Customize your preferences, manage LocalStorage state, and vote on
+          Customize your preferences, reload account data, and vote on
           upcoming features.
         </p>
       </div>
@@ -86,19 +86,18 @@ export default function Settings() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-slate-100 dark:border-slate-800 pt-4">
           <div>
             <h4 className="font-bold text-slate-900 dark:text-white text-sm">
-              Reset Sample Dataset
+              Reload Study Data
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Restore default demo courses, tasks, exams, and notes into
-              LocalStorage.
+              Reload your courses, tasks, exams, and notes from your account.
             </p>
           </div>
           <button
-            onClick={resetToSeedData}
+            onClick={refreshStudyData}
             className="inline-flex items-center gap-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 px-4 py-2.5 text-xs font-bold text-rose-500 transition"
           >
             <RotateCcw className="h-4 w-4" />
-            Reset Data
+            Reload Data
           </button>
         </div>
       </div>
