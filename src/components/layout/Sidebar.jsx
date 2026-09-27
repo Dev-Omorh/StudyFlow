@@ -10,10 +10,11 @@ import {
   Sliders,
   Flame,
   Sparkles,
+  X,
 } from "lucide-react";
-import { useStudy } from "../../context/StudyContext";
+import { useStudy } from "../../context/useStudy";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { tasks, courses, assignments, exams, notes, userProfile } = useStudy();
 
   const pendingTasksCount = tasks.filter(
@@ -60,7 +61,12 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 shrink-0 flex flex-col justify-between border-r border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl h-screen sticky top-0 z-30 transition-all">
+    <aside
+      id="primary-navigation"
+      className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-72 shrink-0 flex-col justify-between border-r border-slate-200 bg-white/95 backdrop-blur-xl transition-transform duration-300 dark:border-slate-800/80 dark:bg-slate-900/95 lg:sticky lg:inset-y-auto lg:left-auto lg:z-30 lg:h-screen lg:w-64 lg:translate-x-0 lg:bg-white/70 lg:dark:bg-slate-900/80 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <div>
         {/* Brand Header */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-100 dark:border-slate-800/60">
@@ -76,6 +82,14 @@ export default function Sidebar() {
               Student Hub
             </p>
           </div>
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            onClick={onClose}
+            className="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 lg:hidden"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         {/* Navigation Items */}
@@ -86,8 +100,9 @@ export default function Sidebar() {
               <NavLink
                 key={item.path}
                 to={item.path}
+                onClick={onClose}
                 className={({ isActive }) =>
-                  `group flex items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all ${
+                  `group flex min-h-11 items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all ${
                     isActive
                       ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 dark:bg-indigo-600"
                       : item.isSpecial

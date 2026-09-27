@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  BookOpen,
   Plus,
   User,
   MapPin,
@@ -8,11 +7,9 @@ import {
   Award,
   Edit2,
   Trash2,
-  FileCheck2,
-  FileText,
   X,
 } from "lucide-react";
-import { useStudy } from "../context/StudyContext";
+import { useStudy } from "../context/useStudy";
 
 export default function Courses() {
   const { courses, tasks, assignments, exams, notes, deleteCourse, openModal } =
@@ -49,13 +46,12 @@ export default function Courses() {
           const courseAssignments = assignments.filter(
             (a) => a.courseId === course.id,
           );
-          const courseExams = exams.filter((e) => e.courseId === course.id);
           const courseNotes = notes.filter((n) => n.courseId === course.id);
 
           return (
             <div
               key={course.id}
-              className="glass-card rounded-3xl p-6 glow-on-hover flex flex-col justify-between space-y-4 relative overflow-hidden"
+              className="glass-card min-w-0 rounded-3xl p-4 glow-on-hover flex flex-col justify-between space-y-4 relative overflow-hidden sm:p-6"
             >
               <div
                 className="absolute top-0 left-0 right-0 h-2"
@@ -88,7 +84,7 @@ export default function Courses() {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                <h3 className="break-words text-xl font-bold text-slate-900 dark:text-white">
                   {course.title}
                 </h3>
 
@@ -131,8 +127,8 @@ export default function Courses() {
               </div>
 
               {/* Quick Summary Counts & Inspection */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
-                <div className="flex items-center gap-3 text-xs text-slate-500">
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 sm:gap-3">
                   <span>{courseTasks.length} tasks</span>
                   <span>•</span>
                   <span>{courseAssignments.length} assignments</span>
@@ -154,23 +150,24 @@ export default function Courses() {
 
       {/* Course Detail Modal */}
       {selectedCourseDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-2xl rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 max-h-[90vh] overflow-y-auto space-y-6">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm animate-in fade-in duration-200 sm:items-center sm:p-4">
+          <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl space-y-6 overflow-y-auto rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:max-h-[90vh] sm:p-6">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-3">
                 <span
                   className="rounded-full px-3 py-1 text-xs font-extrabold text-white"
                   style={{ backgroundColor: selectedCourseDetail.color }}
                 >
                   {selectedCourseDetail.code}
                 </span>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                <h2 className="min-w-0 break-words text-xl font-bold text-slate-900 dark:text-white">
                   {selectedCourseDetail.title}
                 </h2>
               </div>
               <button
                 onClick={() => setSelectedCourseDetail(null)}
-                className="rounded-lg p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                aria-label="Close course details"
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-white"
               >
                 <X className="h-5 w-5" />
               </button>

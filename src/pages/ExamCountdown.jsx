@@ -7,11 +7,9 @@ import {
   CheckCircle2,
   Circle,
   MapPin,
-  Target,
   BookOpen,
-  Award,
 } from "lucide-react";
-import { useStudy } from "../context/StudyContext";
+import { useStudy } from "../context/useStudy";
 
 export default function ExamCountdown() {
   const { exams, courses, toggleExamTopic, deleteExam, openModal } = useStudy();
@@ -86,10 +84,10 @@ export default function ExamCountdown() {
 
       {/* Selected Exam Live Ticker Hero */}
       {selectedExam ? (
-        <div className="glass-card rounded-3xl p-8 relative overflow-hidden bg-gradient-to-br from-indigo-900/10 via-slate-900/5 to-rose-900/10 border border-slate-200 dark:border-slate-800">
+        <div className="glass-card min-w-0 rounded-3xl border border-slate-200 bg-gradient-to-br from-indigo-900/10 via-slate-900/5 to-rose-900/10 p-4 relative overflow-hidden dark:border-slate-800 sm:p-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200/60 dark:border-slate-800">
             <div>
-              <div className="flex items-center gap-3 mb-2">
+              <div className="flex flex-wrap items-center gap-3 mb-2">
                 <span
                   className="rounded-full px-3 py-1 text-xs font-extrabold text-white"
                   style={{
@@ -102,12 +100,12 @@ export default function ExamCountdown() {
                   Exam Weight: {selectedExam.weight}%
                 </span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+              <h2 className="break-words text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">
                 {selectedExam.title}
               </h2>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => openModal("exam", selectedExam)}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 transition"
@@ -127,9 +125,9 @@ export default function ExamCountdown() {
 
           {/* Ticking Counter Display */}
           <div className="py-8">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-              <div className="rounded-2xl bg-white/80 dark:bg-slate-800/80 p-5 shadow-lg border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-md">
-                <span className="text-4xl sm:text-5xl font-extrabold text-indigo-600 dark:text-indigo-400">
+            <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4 sm:gap-4">
+              <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-3 shadow-lg backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-800/80 sm:p-5">
+                <span className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 sm:text-5xl">
                   {timeRemaining.days}
                 </span>
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mt-2">
@@ -137,8 +135,8 @@ export default function ExamCountdown() {
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-white/80 dark:bg-slate-800/80 p-5 shadow-lg border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-md">
-                <span className="text-4xl sm:text-5xl font-extrabold text-indigo-600 dark:text-indigo-400">
+              <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-3 shadow-lg backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-800/80 sm:p-5">
+                <span className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 sm:text-5xl">
                   {timeRemaining.hours.toString().padStart(2, "0")}
                 </span>
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mt-2">
@@ -146,8 +144,8 @@ export default function ExamCountdown() {
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-white/80 dark:bg-slate-800/80 p-5 shadow-lg border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-md">
-                <span className="text-4xl sm:text-5xl font-extrabold text-indigo-600 dark:text-indigo-400">
+              <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-3 shadow-lg backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-800/80 sm:p-5">
+                <span className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 sm:text-5xl">
                   {timeRemaining.mins.toString().padStart(2, "0")}
                 </span>
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mt-2">
@@ -155,8 +153,8 @@ export default function ExamCountdown() {
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-white/80 dark:bg-slate-800/80 p-5 shadow-lg border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-md">
-                <span className="text-4xl sm:text-5xl font-extrabold text-rose-500">
+              <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-3 shadow-lg backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-800/80 sm:p-5">
+                <span className="text-4xl font-extrabold text-rose-500 sm:text-5xl">
                   {timeRemaining.secs.toString().padStart(2, "0")}
                 </span>
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mt-2">

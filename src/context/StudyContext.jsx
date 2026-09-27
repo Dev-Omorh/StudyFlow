@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { StudyContext } from "./studyContext";
 import {
   initialCourses,
   initialTasks,
@@ -9,8 +10,6 @@ import {
   initialUserProfile,
 } from "../utils/seedData";
 import { getStoredItem, setStoredItem, STORAGE_KEYS } from "../utils/storage";
-
-const StudyContext = createContext(null);
 
 export const StudyProvider = ({ children }) => {
   // Persistence state
@@ -344,12 +343,4 @@ export const StudyProvider = ({ children }) => {
       {children}
     </StudyContext.Provider>
   );
-};
-
-export const useStudy = () => {
-  const context = useContext(StudyContext);
-  if (!context) {
-    throw new Error("useStudy must be used within a StudyProvider");
-  }
-  return context;
 };

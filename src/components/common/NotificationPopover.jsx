@@ -7,7 +7,7 @@ import {
   AlertCircle,
   Sparkles,
 } from "lucide-react";
-import { useStudy } from "../../context/StudyContext";
+import { useStudy } from "../../context/useStudy";
 
 export default function NotificationPopover() {
   const { notifications, markNotificationAsRead, clearAllNotifications } =
@@ -20,7 +20,8 @@ export default function NotificationPopover() {
     <div className="relative">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="relative rounded-xl p-2.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+        aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}
+        className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
         title="Notifications"
       >
         <Bell className="h-5 w-5" />
@@ -39,7 +40,7 @@ export default function NotificationPopover() {
             onClick={() => setIsOpen(false)}
           />
 
-          <div className="absolute right-0 mt-3 z-50 w-80 sm:w-96 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-4 animate-in fade-in duration-150">
+          <div className="fixed left-3 right-3 top-[4.5rem] z-50 max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl animate-in fade-in duration-150 dark:border-slate-800 dark:bg-slate-900 sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-3 sm:w-[min(24rem,calc(100vw-2rem))]">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2">
                 <h3 className="font-bold text-slate-900 dark:text-white text-sm">
@@ -70,7 +71,7 @@ export default function NotificationPopover() {
                   <div
                     key={n.id}
                     onClick={() => markNotificationAsRead(n.id)}
-                    className={`cursor-pointer rounded-xl p-3 text-xs transition border ${
+                    className={`min-h-11 cursor-pointer rounded-xl border p-3 text-xs transition ${
                       !n.read
                         ? "bg-indigo-50/50 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-800/40"
                         : "bg-slate-50/50 dark:bg-slate-800/30 border-slate-100 dark:border-slate-800"

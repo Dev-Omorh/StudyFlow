@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Sliders,
   Moon,
   Sun,
   RotateCcw,
@@ -10,13 +9,12 @@ import {
   Calendar,
   Bell,
   UploadCloud,
-  Check,
   Heart,
 } from "lucide-react";
-import { useStudy } from "../context/StudyContext";
+import { useStudy } from "../context/useStudy";
 
 export default function Settings() {
-  const { isDarkMode, toggleDarkMode, resetToSeedData, userProfile } =
+  const { isDarkMode, toggleDarkMode, resetToSeedData } =
     useStudy();
 
   const [votes, setVotes] = useState({

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Bot,
   Send,
@@ -9,7 +9,7 @@ import {
   Zap,
   User,
 } from "lucide-react";
-import { useStudy } from "../context/StudyContext";
+import { useStudy } from "../context/useStudy";
 
 export default function AIAssistant() {
   const { notes, courses, exams } = useStudy();
@@ -23,6 +23,12 @@ export default function AIAssistant() {
   ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const nextMessageId = useRef(0);
+
+  const createMessageId = (prefix) => {
+    nextMessageId.current += 1;
+    return `${prefix}_${nextMessageId.current}`;
+  };
 
   const quickPrompts = [
     { label: "Summarize My CS 201 Notes", icon: BookOpen },
@@ -35,7 +41,7 @@ export default function AIAssistant() {
     const text = textToSend || inputText;
     if (!text.trim()) return;
 
-    const userMsg = { id: "msg_" + Date.now(), sender: "user", text };
+    const userMsg = { id: createMessageId("msg"), sender: "user", text };
     setMessages((prev) => [...prev, userMsg]);
     setInputText("");
     setIsTyping(true);
@@ -58,7 +64,7 @@ export default function AIAssistant() {
 
       setMessages((prev) => [
         ...prev,
-        { id: "ai_" + Date.now(), sender: "ai", text: aiText },
+        { id: createMessageId("ai"), sender: "ai", text: aiText },
       ]);
       setIsTyping(false);
     }, 1200);
@@ -67,12 +73,12 @@ export default function AIAssistant() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+      <div className="flex min-w-0 items-start gap-3">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
           <Bot className="h-6 w-6" />
         </div>
-        <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+        <div className="min-w-0">
+          <h1 className="flex flex-wrap items-center gap-2 break-words text-2xl font-extrabold text-slate-900 dark:text-white">
             StudyFlow AI Assistant
             <span className="rounded-full bg-indigo-500/10 text-indigo-500 px-2.5 py-0.5 text-xs font-bold">
               AI Powered
@@ -102,8 +108,8 @@ export default function AIAssistant() {
       </div>
 
       {/* Chat Container */}
-      <div className="glass-card rounded-3xl p-6 flex flex-col justify-between h-130">
-        <div className="space-y-4 overflow-y-auto pr-2 flex-1">
+      <div className="glass-card flex h-[min(32rem,calc(100dvh-12rem))] min-h-96 min-w-0 flex-col justify-between rounded-3xl p-4 sm:p-6">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-1 sm:pr-2">
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -126,7 +132,7 @@ export default function AIAssistant() {
               </div>
 
               <div
-                className={`rounded-2xl p-4 text-xs sm:text-sm leading-relaxed max-w-[80%] whitespace-pre-wrap ${
+                className={`max-w-[88%] break-words rounded-2xl p-3 text-xs leading-relaxed whitespace-pre-wrap sm:max-w-[80%] sm:p-4 sm:text-sm ${
                   msg.sender === "user"
                     ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
                     : "bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60"
@@ -151,19 +157,20 @@ export default function AIAssistant() {
             e.preventDefault();
             handleSend();
           }}
-          className="flex items-center gap-2 pt-4 border-t border-slate-100 dark:border-slate-800"
+          className="flex min-w-0 items-center gap-2 border-t border-slate-100 pt-4 dark:border-slate-800"
         >
           <input
             type="text"
             placeholder="Ask AI anything about your courses, notes, or study tips..."
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            className="flex-1 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+            className="min-w-0 flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-base text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800/60 dark:text-white sm:px-4 sm:text-sm"
           />
           <button
             type="submit"
             disabled={!inputText.trim()}
-            className="inline-flex items-center justify-center rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 px-5 py-3 text-xs font-bold text-white shadow-lg shadow-indigo-500/25 transition"
+            aria-label="Send message"
+            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 px-3 py-3 text-xs font-bold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-500 disabled:opacity-50 sm:w-auto sm:px-5"
           >
             <Send className="h-4 w-4" />
           </button>

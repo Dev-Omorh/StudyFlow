@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  CheckSquare,
   Plus,
   Filter,
   Kanban,
@@ -12,7 +11,7 @@ import {
   CheckCircle2,
   Circle,
 } from "lucide-react";
-import { useStudy } from "../context/StudyContext";
+import { useStudy } from "../context/useStudy";
 
 export default function Tasks() {
   const { tasks, courses, toggleTaskStatus, deleteTask, openModal } =
@@ -58,12 +57,12 @@ export default function Tasks() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {/* View Mode Toggle */}
           <div className="flex rounded-xl bg-slate-200/80 dark:bg-slate-800 p-1 border border-slate-300/60 dark:border-slate-700">
             <button
               onClick={() => setViewMode("list")}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+              className={`flex min-h-10 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                 viewMode === "list"
                   ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm"
                   : "text-slate-600 dark:text-slate-400"
@@ -74,7 +73,7 @@ export default function Tasks() {
             </button>
             <button
               onClick={() => setViewMode("kanban")}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+              className={`flex min-h-10 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                 viewMode === "kanban"
                   ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm"
                   : "text-slate-600 dark:text-slate-400"
@@ -96,7 +95,7 @@ export default function Tasks() {
       </div>
 
       {/* Filter Bar */}
-      <div className="glass-card rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="glass-card min-w-0 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-2 flex-1">
           <input
             type="text"
@@ -107,8 +106,8 @@ export default function Tasks() {
           />
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2">
             <Filter className="h-3.5 w-3.5 text-slate-400" />
             <span className="text-xs font-semibold text-slate-500">
               Course:
@@ -242,7 +241,7 @@ export default function Tasks() {
         </div>
       ) : (
         /* Kanban Board View */
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {[
             { key: "todo", title: "To Do", color: "border-slate-400" },
             {
