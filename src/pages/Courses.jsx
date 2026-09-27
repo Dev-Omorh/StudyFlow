@@ -12,7 +12,7 @@ import {
 import { useStudy } from "../context/useStudy";
 
 export default function Courses() {
-  const { courses, tasks, assignments, exams, notes, deleteCourse, openModal } =
+  const { courses, tasks, assignments, notes, deleteCourse, openModal } =
     useStudy();
   const [selectedCourseDetail, setSelectedCourseDetail] = useState(null);
 
