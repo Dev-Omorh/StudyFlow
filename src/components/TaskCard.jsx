@@ -1,7 +1,7 @@
 function TaskCard({ task, onDelete, onEdit, onToggle }) {
   return (
-    <div className="task-card bg-white rounded-xl shadow p-5 flex justify-between items-center">
-      <div className="flex gap-4 ">
+    <div className="task-card flex flex-col items-start justify-between gap-4 rounded-xl bg-white p-4 shadow sm:flex-row sm:items-center sm:p-5">
+      <div className="flex min-w-0 flex-wrap items-start gap-4">
         <input
           type="checkbox"
           checked={task.completed}
@@ -12,7 +12,7 @@ function TaskCard({ task, onDelete, onEdit, onToggle }) {
         <button onClick={() => onEdit(task.id)}>Edit</button>
 
         <div>
-          <h3 className="font-semibold text-lg">{task.title}</h3>
+          <h3 className="break-words font-semibold text-lg">{task.title}</h3>
           <p className="text-gray-500">{task.course}</p>
           <p className="text-red-500">{task.dueDate}</p>
         </div>

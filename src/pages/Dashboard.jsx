@@ -10,17 +10,15 @@ import {
   Pause,
   RotateCcw,
   Sparkles,
-  ArrowRight,
   TrendingUp,
   FileText,
   Calendar,
 } from "lucide-react";
-import { useStudy } from "../context/StudyContext";
+import { useStudy } from "../context/useStudy";
 
 export default function Dashboard() {
   const {
     tasks,
-    courses,
     assignments,
     exams,
     notes,
@@ -38,9 +36,10 @@ export default function Dashboard() {
     if (timerRunning && timerSeconds > 0) {
       interval = setInterval(() => {
         setTimerSeconds((prev) => prev - 1);
+        if (timerSeconds === 1) {
+          setTimerRunning(false);
+        }
       }, 1000);
-    } else if (timerSeconds === 0) {
-      setTimerRunning(false);
     }
     return () => clearInterval(interval);
   }, [timerRunning, timerSeconds]);
@@ -92,15 +91,15 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Welcome Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-800 p-8 text-white shadow-2xl shadow-indigo-600/20">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-800 p-5 text-white shadow-2xl shadow-indigo-600/20 sm:p-8">
         <div className="absolute right-0 top-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-white/10 blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
+          <div className="min-w-0">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-md px-3 py-1 text-xs font-semibold tracking-wide text-indigo-100 mb-3 border border-white/20">
               <Sparkles className="h-3.5 w-3.5" />
               <span>Fall 2026 Academic Term</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight break-words">
               Welcome back, {userProfile.name}! 👋
             </h1>
             <p className="mt-2 text-indigo-100/90 text-sm max-w-xl">
@@ -108,7 +107,7 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => openModal("task")}
               className="inline-flex items-center gap-2 rounded-2xl bg-white hover:bg-slate-50 px-5 py-3 text-sm font-bold text-indigo-600 shadow-xl transition transform hover:scale-105"
@@ -220,8 +219,8 @@ export default function Dashboard() {
 
           {nextExam ? (
             <div className="my-6">
-              <div className="grid grid-cols-4 gap-3 text-center">
-                <div className="rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 p-4 border border-slate-200/50 dark:border-slate-700/50">
+              <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4 sm:gap-3">
+                <div className="rounded-2xl bg-slate-100/70 p-2 border border-slate-200/50 dark:border-slate-700/50 dark:bg-slate-800/60 sm:p-4">
                   <span className="text-3xl sm:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">
                     {timeRemaining.days}
                   </span>
@@ -229,7 +228,7 @@ export default function Dashboard() {
                     Days
                   </p>
                 </div>
-                <div className="rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 p-4 border border-slate-200/50 dark:border-slate-700/50">
+                <div className="rounded-2xl bg-slate-100/70 p-2 border border-slate-200/50 dark:border-slate-700/50 dark:bg-slate-800/60 sm:p-4">
                   <span className="text-3xl sm:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">
                     {timeRemaining.hours.toString().padStart(2, "0")}
                   </span>
@@ -237,7 +236,7 @@ export default function Dashboard() {
                     Hours
                   </p>
                 </div>
-                <div className="rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 p-4 border border-slate-200/50 dark:border-slate-700/50">
+                <div className="rounded-2xl bg-slate-100/70 p-2 border border-slate-200/50 dark:border-slate-700/50 dark:bg-slate-800/60 sm:p-4">
                   <span className="text-3xl sm:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">
                     {timeRemaining.mins.toString().padStart(2, "0")}
                   </span>
@@ -245,7 +244,7 @@ export default function Dashboard() {
                     Mins
                   </p>
                 </div>
-                <div className="rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 p-4 border border-slate-200/50 dark:border-slate-700/50">
+                <div className="rounded-2xl bg-slate-100/70 p-2 border border-slate-200/50 dark:border-slate-700/50 dark:bg-slate-800/60 sm:p-4">
                   <span className="text-3xl sm:text-4xl font-extrabold text-rose-500">
                     {timeRemaining.secs.toString().padStart(2, "0")}
                   </span>
@@ -255,7 +254,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="mt-5 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/30 rounded-xl p-3">
+              <div className="mt-5 flex flex-col gap-2 rounded-xl bg-slate-50 p-3 text-xs text-slate-500 dark:bg-slate-800/30 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
                 <span>📍 Location: <strong className="text-slate-800 dark:text-slate-200">{nextExam.location}</strong></span>
                 <span>🎯 Target: <strong className="text-emerald-500">{nextExam.targetGrade}</strong></span>
               </div>
@@ -278,7 +277,7 @@ export default function Dashboard() {
           </div>
 
           <div className="my-6 text-center">
-            <span className="text-5xl font-extrabold tracking-widest font-mono text-slate-900 dark:text-white">
+            <span className="text-4xl font-extrabold tracking-widest font-mono text-slate-900 dark:text-white sm:text-5xl">
               {formatTimer(timerSeconds)}
             </span>
             <p className="text-xs text-slate-400 mt-2">
@@ -312,9 +311,9 @@ export default function Dashboard() {
       {/* Task & Notes Quick Glance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Quick Task List */}
-        <div className="glass-card rounded-3xl p-6 space-y-4">
+        <div className="glass-card min-w-0 rounded-3xl p-4 space-y-4 sm:p-6">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-            <h3 className="font-bold text-slate-900 dark:text-white text-lg flex items-center gap-2">
+            <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2 sm:text-lg">
               <CheckSquare className="h-5 w-5 text-indigo-500" />
               Today's Action Items
             </h3>
@@ -363,9 +362,9 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Notes */}
-        <div className="glass-card rounded-3xl p-6 space-y-4">
+        <div className="glass-card min-w-0 rounded-3xl p-4 space-y-4 sm:p-6">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-            <h3 className="font-bold text-slate-900 dark:text-white text-lg flex items-center gap-2">
+            <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2 sm:text-lg">
               <FileText className="h-5 w-5 text-emerald-500" />
               Recent Notes
             </h3>

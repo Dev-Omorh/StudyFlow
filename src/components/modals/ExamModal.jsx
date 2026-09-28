@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, Check, Plus, Trash2 } from "lucide-react";
-import { useStudy } from "../../context/StudyContext";
+import { useStudy } from "../../context/useStudy";
 
 export default function ExamModal() {
   const { activeModal, closeModal, editingItem, addExam, updateExam, courses } =
@@ -17,6 +17,7 @@ export default function ExamModal() {
 
   useEffect(() => {
     if (editingItem) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset form fields when the edit target changes.
       setTitle(editingItem.title || "");
       setCourseId(editingItem.courseId || courses[0]?.id || "");
       setExamDate(
@@ -38,11 +39,10 @@ export default function ExamModal() {
       setTargetGrade("A");
       setTopics([
         {
-          id: "t_1",
           topic: "Chapter 1 & 2 Core Definitions",
           completed: false,
         },
-        { id: "t_2", topic: "Formula derivations & proofs", completed: false },
+        { topic: "Formula derivations & proofs", completed: false },
       ]);
     }
   }, [editingItem, courses]);
@@ -54,7 +54,6 @@ export default function ExamModal() {
     setTopics((prev) => [
       ...prev,
       {
-        id: "topic_" + Date.now(),
         topic: newTopicInput.trim(),
         completed: false,
       },
@@ -62,8 +61,8 @@ export default function ExamModal() {
     setNewTopicInput("");
   };
 
-  const handleRemoveTopic = (id) => {
-    setTopics((prev) => prev.filter((t) => t.id !== id));
+  const handleRemoveTopic = (topicIndex) => {
+    setTopics((prev) => prev.filter((_, index) => index !== topicIndex));
   };
 
   const handleSubmit = (e) => {
@@ -88,15 +87,16 @@ export default function ExamModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 transition-all max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-3 backdrop-blur-sm animate-in fade-in duration-200 sm:items-center sm:p-4">
+      <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl transition-all dark:border-slate-800 dark:bg-slate-900 sm:max-h-[90vh] sm:p-6">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">
             {editingItem ? "Edit Exam Countdown" : "Schedule New Exam"}
           </h2>
           <button
             onClick={closeModal}
-            className="rounded-lg p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            aria-label="Close exam form"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>
@@ -117,7 +117,7 @@ export default function ExamModal() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                 Course
@@ -149,7 +149,7 @@ export default function ExamModal() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                 Location
@@ -216,15 +216,15 @@ export default function ExamModal() {
             </div>
 
             <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-              {topics.map((t) => (
+              {topics.map((t, index) => (
                 <div
-                  key={t.id}
+                  key={t.id || `${t.topic}-${index}`}
                   className="flex items-center justify-between rounded-lg bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/50"
                 >
                   <span>{t.topic}</span>
                   <button
                     type="button"
-                    onClick={() => handleRemoveTopic(t.id)}
+                    onClick={() => handleRemoveTopic(index)}
                     className="text-slate-400 hover:text-rose-500"
                   >
                     <Trash2 className="h-3.5 w-3.5" />

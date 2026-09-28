@@ -1,16 +1,6 @@
 import { useState } from "react";
-import {
-  BookOpen,
-  Plus,
-  Edit2,
-  Trash2,
-  Clock,
-  Award,
-  CheckCircle,
-  FileText,
-  ChevronRight,
-} from "lucide-react";
-import { useStudy } from "../context/StudyContext";
+import { Plus, Edit2, Trash2, ChevronRight } from "lucide-react";
+import { useStudy } from "../context/useStudy";
 
 export default function Assignments() {
   const {
@@ -100,7 +90,7 @@ export default function Assignments() {
       </div>
 
       {/* Assignments List */}
-      <div className="glass-card rounded-3xl p-6 space-y-4">
+      <div className="glass-card min-w-0 rounded-3xl p-4 space-y-4 sm:p-6">
         {filteredAssignments.length === 0 ? (
           <p className="py-12 text-center text-sm text-slate-400">
             No assignments found under{" "}
@@ -118,13 +108,13 @@ export default function Assignments() {
                 key={item.id}
                 className="group flex flex-col md:flex-row md:items-center justify-between rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/70 dark:border-slate-700/50 p-5 transition hover:border-indigo-500/50 hover:shadow-md gap-4"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex min-w-0 items-start gap-3 sm:gap-4">
                   <div className="mt-1 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-500 font-extrabold text-xs">
                     {item.weight}%
                   </div>
 
-                  <div>
-                    <div className="flex items-center gap-2">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span
                         className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
                         style={{
@@ -138,7 +128,7 @@ export default function Assignments() {
                       </span>
                     </div>
 
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">
+                    <h3 className="mt-1 break-words text-base font-bold text-slate-900 dark:text-white">
                       {item.title}
                     </h3>
 
@@ -150,7 +140,7 @@ export default function Assignments() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between md:justify-end gap-4 border-t md:border-t-0 border-slate-200/40 dark:border-slate-700/40 pt-3 md:pt-0">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200/40 pt-3 dark:border-slate-700/40 md:justify-end md:border-t-0 md:pt-0 sm:gap-4">
                   {/* Score pill */}
                   {scorePct !== null && (
                     <div className="text-right">

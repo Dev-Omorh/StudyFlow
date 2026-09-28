@@ -30,13 +30,13 @@
 }
 
 body {
+  min-width: 320px;
   font-family: var(--font-sans);
   background-color: var(--bg-primary);
   color: var(--text-main);
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
-  overflow-x: hidden;
 }
 
 h1,

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Search, X, CheckSquare, BookOpen, Clock, FileText, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useStudy } from "../../context/StudyContext";
+import { useStudy } from "../../context/useStudy";
 
 export default function GlobalSearchModal() {
   const { searchOpen, setSearchOpen, searchQuery, setSearchQuery, tasks, courses, assignments, exams, notes } = useStudy();
@@ -46,29 +46,30 @@ export default function GlobalSearchModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 backdrop-blur-sm p-4 pt-16 sm:pt-24 animate-in fade-in duration-150">
-      <div className="w-full max-w-2xl rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden transition-all">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-3 pt-12 backdrop-blur-sm animate-in fade-in duration-150 sm:p-4 sm:pt-24">
+      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl transition-all dark:border-slate-800 dark:bg-slate-900">
         {/* Search Header */}
-        <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 px-4 py-3.5">
-          <Search className="h-5 w-5 text-slate-400" />
+        <div className="flex min-w-0 items-center gap-2 border-b border-slate-100 px-3 py-3.5 dark:border-slate-800 sm:gap-3 sm:px-4">
+          <Search className="h-5 w-5 shrink-0 text-slate-400" />
           <input
             type="text"
             autoFocus
             placeholder="Search tasks, notes, courses, exams, assignments..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 bg-transparent text-base text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none"
+            className="min-w-0 flex-1 bg-transparent text-base text-slate-900 placeholder-slate-400 focus:outline-none dark:text-white"
           />
           <button
             onClick={() => setSearchOpen(false)}
-            className="rounded-lg p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            aria-label="Close search"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Results Container */}
-        <div className="p-4 max-h-[60vh] overflow-y-auto space-y-4">
+        <div className="max-h-[calc(100dvh-8rem)] space-y-4 overflow-y-auto p-3 sm:max-h-[60vh] sm:p-4">
           {!q ? (
             <div className="py-8 text-center text-xs text-slate-400 space-y-2">
               <p>Type anything to search across your STUDYFLOW workspace</p>

@@ -1,17 +1,14 @@
 import { useState } from "react";
 import {
-  FileText,
   Plus,
   Search,
   Star,
   Download,
   Edit2,
   Trash2,
-  Tag,
-  BookOpen,
   Calendar,
 } from "lucide-react";
-import { useStudy } from "../context/StudyContext";
+import { useStudy } from "../context/useStudy";
 
 export default function Notes() {
   const { notes, courses, toggleFavoriteNote, deleteNote, openModal } =
@@ -84,9 +81,9 @@ export default function Notes() {
       </div>
 
       {/* Two Column Split Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-150">
+      <div className="grid min-h-0 grid-cols-1 gap-4 lg:min-h-150 lg:grid-cols-12 sm:gap-6">
         {/* Left Column: Notes Directory */}
-        <div className="lg:col-span-5 glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4">
+        <div className="glass-card min-w-0 space-y-4 rounded-3xl p-4 lg:col-span-5 sm:p-5">
           <div className="space-y-3">
             {/* Search & Course Filter */}
             <div className="relative">
@@ -96,7 +93,7 @@ export default function Notes() {
                 placeholder="Search notes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-9 pr-3 text-base text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800/60 dark:text-white sm:py-2 sm:text-sm"
               />
             </div>
 
@@ -121,7 +118,7 @@ export default function Notes() {
           </div>
 
           {/* List of Notes */}
-          <div className="space-y-2.5 overflow-y-auto max-h-125 pr-1 flex-1">
+          <div className="max-h-72 space-y-2.5 overflow-y-auto pr-1 sm:max-h-125 lg:flex-1">
             {filteredNotes.length === 0 ? (
               <p className="py-12 text-center text-xs text-slate-400">
                 No notes match.
@@ -158,7 +155,8 @@ export default function Notes() {
                           e.stopPropagation();
                           toggleFavoriteNote(n.id);
                         }}
-                        className={`p-1 transition ${
+                        aria-label={`${n.favorite ? "Remove" : "Add"} ${n.title} ${n.favorite ? "from" : "to"} favorites`}
+                        className={`inline-flex h-11 w-11 items-center justify-center p-1 transition ${
                           n.favorite
                             ? "text-amber-400"
                             : isSelected
@@ -199,12 +197,12 @@ export default function Notes() {
         </div>
 
         {/* Right Column: Note Canvas Viewer */}
-        <div className="lg:col-span-7 glass-card rounded-3xl p-6 flex flex-col justify-between space-y-4">
+        <div className="glass-card min-w-0 space-y-4 rounded-3xl p-4 lg:col-span-7 sm:p-6">
           {activeNote ? (
             <>
               <div className="space-y-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span
                       className="rounded-full px-3 py-1 text-xs font-extrabold text-white"
                       style={{
@@ -218,7 +216,7 @@ export default function Notes() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <button
                       onClick={() => handleExportMarkdown(activeNote)}
                       className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 transition"
@@ -229,14 +227,16 @@ export default function Notes() {
                     </button>
                     <button
                       onClick={() => openModal("note", activeNote)}
-                      className="rounded-xl bg-slate-100 dark:bg-slate-800 p-2 text-slate-500 hover:text-indigo-600 transition"
+                      aria-label="Edit note"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 p-2 text-slate-500 transition hover:text-indigo-600 dark:bg-slate-800"
                       title="Edit Note"
                     >
                       <Edit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => deleteNote(activeNote.id)}
-                      className="rounded-xl bg-rose-500/10 p-2 text-rose-500 hover:bg-rose-500/20 transition"
+                      aria-label="Delete note"
+                      className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500/10 p-2 text-rose-500 transition hover:bg-rose-500/20"
                       title="Delete Note"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -244,7 +244,7 @@ export default function Notes() {
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+                <h2 className="break-words text-2xl font-extrabold text-slate-900 dark:text-white">
                   {activeNote.title}
                 </h2>
 
@@ -259,7 +259,7 @@ export default function Notes() {
               </div>
 
               {/* Formatted Markdown Content Body */}
-              <div className="flex-1 overflow-y-auto max-h-105 pr-2 space-y-3 font-mono text-sm leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
+              <div className="max-h-105 min-w-0 flex-1 overflow-y-auto break-words pr-2 font-mono text-sm leading-relaxed whitespace-pre-wrap text-slate-800 dark:text-slate-200">
                 {activeNote.content}
               </div>
             </>
